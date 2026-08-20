@@ -1,0 +1,83 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <!-- Required to host the AxMsRdpClient ActiveX control (a WinForms control)
+         inside WPF via WindowsFormsHost. -->
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>ShipnetOnline</AssemblyName>
+    <RootNamespace>ShipnetOnline</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon Condition="Exists('Assets\shipnet.ico')">Assets\shipnet.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Azure AD / MSAL Authentication -->
+    <PackageReference Include="Microsoft.Identity.Client"                 Version="4.61.3" />
+    <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.61.3" />
+
+    <!-- Azure Application Insights Telemetry -->
+    <PackageReference Include="Microsoft.ApplicationInsights"             Version="2.22.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.WindowsServer" Version="2.22.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.ApplicationInsights" Version="2.22.0" />
+
+    <!-- Structured Logging -->
+    <PackageReference Include="Serilog"                                   Version="4.0.1" />
+    <PackageReference Include="Serilog.Sinks.ApplicationInsights"         Version="4.0.0" />
+    <PackageReference Include="Serilog.Sinks.File"                        Version="5.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console"                     Version="6.0.0" />
+
+    <!-- Secure credential storage -->
+    <PackageReference Include="Microsoft.Windows.CsWin32"                 Version="0.3.106" PrivateAssets="all" />
+
+    <!-- DI + Configuration -->
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection"  Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json"   Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting"              Version="8.0.0" />
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <!--
+    RDP ActiveX control (MSTSCLib) — this is NOT a NuGet package.
+    It ships as a COM component (mstscax.dll) registered with Windows.
+    You must generate the interop assemblies locally, one of two ways:
+
+    OPTION A (recommended, Visual Studio):
+      1. Right-click the project → Add → COM Reference...
+      2. Check "Microsoft Terminal Services Client Control 2.0" (or 1.0 on older
+         Windows builds) and click OK.
+      3. Visual Studio auto-generates Interop.MSTSCLib.dll and
+         AxInterop.MSTSCLib.dll under obj\ and references them for you —
+         no csproj edit needed, this comment can be deleted afterward.
+
+    OPTION B (manual / CLI build with aximp.exe):
+      1. Locate mstscax.dll (normally C:\Windows\System32\mstscax.dll).
+      2. From a Developer Command Prompt:
+           aximp.exe C:\Windows\System32\mstscax.dll
+      3. This produces AxMSTSCLib.dll and MSTSCLib.dll next to it.
+      4. Reference the generated DLLs directly, e.g.:
+
+      <ItemGroup>
+        <Reference Include="AxMSTSCLib">
+          <HintPath>libs\AxMSTSCLib.dll</HintPath>
+        </Reference>
+        <Reference Include="MSTSCLib">
+          <HintPath>libs\MSTSCLib.dll</HintPath>
+        </Reference>
+      </ItemGroup>
+
+    Either path requires Visual Studio / Windows SDK tooling — this cannot be
+    restored or built from `dotnet restore` alone, and cannot be built on
+    non-Windows machines.
+  -->
+
+</Project>

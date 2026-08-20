@@ -1,0 +1,35 @@
+<Application x:Class="ShipnetOnline.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--
+        Deliberately no StartupUri here — App.xaml.cs.OnStartup resolves the
+        LoginWindow through the DI container (AppHost.Services) instead, so the
+        window gets its ViewModel and services injected correctly.
+    -->
+    <Application.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Shared brushes / styles used by LoginWindow and MainWindow -->
+                <ResourceDictionary>
+                    <SolidColorBrush x:Key="BrandDarkBrush" Color="#0D2A4A" />
+                    <SolidColorBrush x:Key="BrandAccentBrush" Color="#5AA0DC" />
+                    <SolidColorBrush x:Key="BrandBackgroundBrush" Color="#F4F6F8" />
+                    <SolidColorBrush x:Key="StatusGoodBrush" Color="#2E7D32" />
+                    <SolidColorBrush x:Key="StatusWarnBrush" Color="#B8860B" />
+                    <SolidColorBrush x:Key="StatusBadBrush" Color="#C62828" />
+
+                    <Style TargetType="Button" x:Key="PrimaryButton">
+                        <Setter Property="Background" Value="{StaticResource BrandAccentBrush}" />
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="Padding" Value="16,8" />
+                        <Setter Property="FontWeight" Value="SemiBold" />
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Setter Property="Cursor" Value="Hand" />
+                    </Style>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
